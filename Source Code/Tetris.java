@@ -110,6 +110,62 @@ public class Tetris extends JFrame {
 	 * The speed of the game.
 	 */
 	private float gameSpeed;
+
+	
+        /**
+	 * Interface to define theme setting methods.
+	 */
+        interface theme{
+        void SetTheme(SidePanel sidePanel,BoardPanel boardPanel);
+        }
+    
+        
+        /**
+	 * Light theme implementation.
+	 */
+        
+        class Light implements theme{
+        
+        @Override
+        public void SetTheme(SidePanel sidePanel ,BoardPanel boardPanel){
+            
+            sidePanel.setBackground(Color.WHITE);
+            boardPanel.setBackground(Color.WHITE);
+
+            }
+        
+        }
+        
+        /**
+	 * Dark theme implementation.
+	 */
+    
+        class Dark implements theme{
+        
+        @Override
+        public void SetTheme(SidePanel sidePanel,BoardPanel boardPanel){
+            sidePanel.setBackground(Color.BLACK);
+            boardPanel.setBackground(Color.BLACK);
+            
+            }
+        
+        }
+        
+        /**
+	 * Factory for creating themes.
+	 */          
+        public class ThemeFactory  {
+
+          public theme getTheme(String ThemeType){
+            if(ThemeType.equalsIgnoreCase("Light")){
+                return new Light();
+            } else if(ThemeType.equalsIgnoreCase("Dark")){
+                 return new Dark();
+            }
+           return null; 
+          } 
+        }
+
 		
 	/**
 	 * Creates a new Tetris instance. Sets up the window's properties,
