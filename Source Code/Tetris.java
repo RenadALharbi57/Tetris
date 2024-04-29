@@ -282,6 +282,23 @@ public class Tetris extends JFrame {
 						resetGame();
 					}
 					break;
+
+				
+                                // Change to Dark Theme        
+                                     case KeyEvent.VK_L:
+					
+					
+                                        theme selectedThemeD = themeFactory.getTheme("Dark"); 
+                                        selectedThemeD.SetTheme(side,board);
+					
+                                    break;
+                                    // Change to Light Theme        
+                                    case KeyEvent.VK_M:
+					
+					theme selectedThemeL = themeFactory.getTheme("Light"); 
+                                        selectedThemeL.SetTheme(side,board);
+					
+                                    break;
 				
 				}
 			}
