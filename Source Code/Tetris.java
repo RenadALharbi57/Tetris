@@ -12,6 +12,14 @@ import javax.swing.JFrame;
  *
  */
 public class Tetris extends JFrame {
+
+	
+	private LoginProxy loginProxy;
+
+    public Tetris(LoginProxy loginProxy) {
+        this.loginProxy = loginProxy;
+        // Other constructor code...
+    }
 	
 	/**
 	 * The Serial Version UID.
@@ -631,8 +639,28 @@ public class Tetris extends JFrame {
 	 * @param args Unused.
 	 */
 	public static void main(String[] args) {
-		Tetris tetris = new Tetris();
-		tetris.startGame();
+		
+	// Create an instance of the ExistingLoginPage
+    ExistingLoginPage loginPage = new ExistingLoginPage();
+
+    // Create an instance of the adapter, passing the username and password fields from the login page
+    LoginProxy loginProxy = new LoginProxy(loginPage.getUsernameField(), loginPage.getPasswordField());
+
+    // Use the proxy for authentication
+    String username = "admin";
+    String password = "password";
+    boolean isAuthenticated = loginProxy.authenticate(username, password);
+
+    if (isAuthenticated) {
+        System.out.println("Login successful!");
+        // Start the Tetris game
+        Tetris tetris = new Tetris(loginProxy);
+        tetris.startGame();
+    } else {
+        System.out.println("Login failed. Invalid username or password.");
+        // Handle login failure scenario
+    }
+    
 	}
 
 }
