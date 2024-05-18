@@ -17,3 +17,5 @@
 /Tetris$ResetGame.class
 /Tetris$StartState.class
 /Tetris$State.class
+/TetrisMemento.class
+/TetrisCaretaker.class

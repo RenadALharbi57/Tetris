@@ -20,6 +20,7 @@ import javax.swing.SwingUtilities;
  *
  */
 public class Tetris extends JFrame  {
+
 	
 	     
 
@@ -133,7 +134,48 @@ public class Tetris extends JFrame  {
 	 * The speed of the game.
 	 */
 	private float gameSpeed;
-        
+
+    private TetrisCaretaker caretaker = new TetrisCaretaker();
+
+	
+	//////memento
+
+	
+	 // Method to save the game state
+    public TetrisMemento saveStateToMemento() {
+        return new TetrisMemento(level, score, currentType, nextType, currentCol, currentRow, currentRotation, isPaused, isGameOver, isNewGame, gameSpeed, dropCooldown, random);
+    }
+
+    // Method to restore the game state
+    public void getStateFromMemento(TetrisMemento memento) {
+        this.level = memento.getLevel();
+        this.score = memento.getScore();
+        this.currentType = memento.getCurrentType();
+        this.nextType = memento.getNextType();
+        this.currentCol = memento.getCurrentCol();
+        this.currentRow = memento.getCurrentRow();
+        this.currentRotation = memento.getCurrentRotation();
+        this.isPaused = memento.isPaused();
+        this.isGameOver = memento.isGameOver();
+        this.isNewGame = memento.isNewGame();
+        this.gameSpeed = memento.getGameSpeed();
+        this.dropCooldown = memento.getDropCooldown();
+        this.random = memento.getRandom();
+        logicTimer.setCyclesPerSecond(gameSpeed);
+    }
+	
+    // New methods for saving and loading state
+    public void saveGameState() {
+        caretaker.saveState(saveStateToMemento());
+    }
+
+    public void loadGameState() {
+        TetrisMemento memento = caretaker.loadState();
+        if (memento != null) {
+            getStateFromMemento(memento);
+        }
+    }
+        //////memento
         /**
 	 * Interface to define theme setting methods.
 	 */
@@ -352,6 +394,13 @@ public class Tetris extends JFrame  {
                     selectedThemeL.SetTheme(side,instance);
 					
                     break;
+                    
+                case KeyEvent.VK_F5: // Save state
+                    saveGameState();
+                    break;
+                case KeyEvent.VK_F9: // Load state
+                    loadGameState();
+                    break;
                                           				
 				}
 			}
@@ -370,10 +419,8 @@ public class Tetris extends JFrame  {
 					logicTimer.setCyclesPerSecond(gameSpeed);
 					logicTimer.reset();
 					break;
-				}
-				
+				}	
 			}
-			
 		});
 		
 		/*
@@ -739,6 +786,4 @@ public static void main(String[] args) {
 //    }
 //}
 }
-
-
 }
