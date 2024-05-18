@@ -1,19 +1,15 @@
 import java.util.Stack;
 
 public class TetrisCaretaker {
+	//Where all mementos are saved
     private Stack<TetrisMemento> mementoStack = new Stack<>();
 
-    public void saveState(TetrisMemento memento) {
-        mementoStack.push(memento);
+    public void addMemento(TetrisMemento memento) {
+        mementoStack.add(memento);
         System.out.println("Game state saved.");
     }
 
-    public TetrisMemento loadState() {
-        if (!mementoStack.isEmpty()) {
-            System.out.println("Game state loaded.");
-            return mementoStack.pop();
+    public TetrisMemento getMemento(int index) {
+        return mementoStack.get(index);    
         }
-        System.out.println("No saved game state to load.");
-        return null;
-    }
 }

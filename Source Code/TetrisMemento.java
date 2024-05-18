@@ -1,18 +1,15 @@
 
 public class TetrisMemento {
-    private final int level;
+	//The level & score stored in memento Object
     private final int score;
 
-    
-    public TetrisMemento(int level, int score) {
-        this.level = level;
+    //Save a new level & score to the memento Object
+    public TetrisMemento(int score) {
         this.score = score;
 
     }
 
-	public int getLevel() {
-        return level;
-    }
+    //Return the value stored in level & score 
 
     public int getScore() {
         return score;

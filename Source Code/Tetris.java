@@ -1,17 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
-import javax.swing.JButton;
+
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+
 
 /**
  * The {@code Tetris} class is responsible for handling much of the game logic and
@@ -20,9 +15,6 @@ import javax.swing.SwingUtilities;
  *
  */
 public class Tetris extends JFrame  {
-
-	
-	     
 
 	private LoginProxy loginProxy;
 
@@ -53,7 +45,6 @@ public class Tetris extends JFrame  {
 //     Private BordPanel board
 //	change it to instance and call it throw Singleton  class
         
-	
 	BoardPanel instance = BoardPanel.getInstance(this);
         	
 	/**
@@ -135,40 +126,46 @@ public class Tetris extends JFrame  {
 	 */
 	private float gameSpeed;
 
-    private TetrisCaretaker caretaker = new TetrisCaretaker();
-
-	
 	//////memento
 
-	
-	 // Method to save the game state
-    public TetrisMemento saveStateToMemento() {
-        return new TetrisMemento(level, score);
+    private TetrisCaretaker caretaker = new TetrisCaretaker();
+    
+
+    public void set(int newScore) {
+    	System.out.println("From Originator: Current Version of Score: " +newScore);
+    	this.score = newScore;
+
     }
 
-    // Method to restore the game state
-    public void getStateFromMemento(TetrisMemento memento) {
-        this.level = memento.getLevel();
-        this.score = memento.getScore();
+	 // Creates a new Memento with a new article
+    public TetrisMemento storeInMemento() {
+    	System.out.println("From Originator: Saving to Memento");        
+    	return new TetrisMemento(score);
+    }
+
+    // Gets the level & score currently stored in memento
+    public void restoreFromMemento(TetrisMemento memento) {
+        level = memento.getScore();
 
         logicTimer.setCyclesPerSecond(gameSpeed);
     }
 	
     // New methods for saving and loading state
     public void saveGameState() {
-        caretaker.saveState(saveStateToMemento());
+        caretaker.addMemento(storeInMemento());
         System.out.println("Saved the game state.");
-        System.out.println("Saved Score: " + score + ", Level: " + level);
+        System.out.println("Saved Score: " + score );
     }
 
     public void loadGameState() {
-        TetrisMemento memento = caretaker.loadState();
+        TetrisMemento memento = caretaker.getMemento(score);
         if (memento != null) {
-            getStateFromMemento(memento);
+            restoreFromMemento(memento);
             System.out.println("Loaded the game state.");
-            System.out.println("Loaded Score: " + score + ", Level: " + level);
+            System.out.println("Loaded Score: " + score );
         }
     }
+	
         //////memento
         /**
 	 * Interface to define theme setting methods.
@@ -206,7 +203,6 @@ public class Tetris extends JFrame  {
             instance.setBackground(Color.BLACK);
             
             }
-        
         }
         
         /**
@@ -224,10 +220,8 @@ public class Tetris extends JFrame  {
           } 
         }
 
-
         
 //        State Desigen Pattren 
-        
         public class Context {
         	
         	private State state;
@@ -246,10 +240,6 @@ public class Tetris extends JFrame  {
         	public void doAction(Context context);
         }
 
-        
-        
-        
-        
 
 	
 	/**
@@ -399,6 +389,7 @@ public class Tetris extends JFrame  {
 				}
 			}
 			
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				
@@ -426,6 +417,8 @@ public class Tetris extends JFrame  {
 		setVisible(true);
 	}
 	
+
+
 	/**
 	 * Starts the game running. Initializes everything and enters the game loop.
 	 */
@@ -481,10 +474,8 @@ public class Tetris extends JFrame  {
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
-			}
-			
-		}
-		
+			}	
+		}	
 	}
 	
 	public String toString(){
@@ -559,7 +550,6 @@ public class Tetris extends JFrame  {
 	 * Resets the game variables to their default values at the start
 	 * of a new game.
 	 */
-	
 	private class ResetGame implements State {
 		public void doAction(Context context) {
 
@@ -575,8 +565,7 @@ public class Tetris extends JFrame  {
 		spawnPiece();
 		
 		}
-	}
-		
+	}	
 	/**
 	 * Spawns a new piece and resets our piece's variables to their default
 	 * values.
@@ -750,19 +739,15 @@ public class Tetris extends JFrame  {
 
 		ResetGame resetGame = new ResetGame();
 		resetGame.doAction(context);
-
 	}
-
 /**
  * Entry-point of the game. Responsible for creating and starting a new
  * game instance.
  * @param args Unused.
  */
 public static void main(String[] args) {
-	
 		NewLoginAdapter.main(args);
         Tetris tetris = new Tetris(); // Pass the login proxy to Tetris constructor
         tetris.startGame();
-
 }
 }
