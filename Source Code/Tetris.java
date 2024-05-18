@@ -748,6 +748,7 @@ public class Tetris extends JFrame  {
 public static void main(String[] args) {
 		NewLoginAdapter.main(args);
         Tetris tetris = new Tetris(); // Pass the login proxy to Tetris constructor
+        tetris.set(100);
         tetris.startGame();
 }
 }
