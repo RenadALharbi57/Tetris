@@ -1,4 +1,3 @@
-package src;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 

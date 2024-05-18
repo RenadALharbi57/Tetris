@@ -1,9 +1,18 @@
+package src;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
+import javax.swing.JButton;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  * The {@code Tetris} class is responsible for handling much of the game logic and
@@ -11,14 +20,15 @@ import javax.swing.JFrame;
  * @author Kanak Negi
  *
  */
-public class Tetris extends JFrame {
-
+public class Tetris extends JFrame  {
 	
+	     
+
 	private LoginProxy loginProxy;
 
     public Tetris(LoginProxy loginProxy) {
         this.loginProxy = loginProxy;
-        // Other constructor code...
+        
     }
 	
 	/**
@@ -39,12 +49,18 @@ public class Tetris extends JFrame {
 	/**
 	 * The BoardPanel instance.
 	 */
-	private BoardPanel board;
 	
+//     Private BordPanel board
+//	change it to instance and call it throw Singleton  class
+        
+	
+	BoardPanel instance = BoardPanel.getInstance(this);
+        	
 	/**
 	 * The SidePanel instance.
 	 */
 	private SidePanel side;
+        
 	
 	/**
 	 * Whether or not the game is paused.
@@ -118,13 +134,12 @@ public class Tetris extends JFrame {
 	 * The speed of the game.
 	 */
 	private float gameSpeed;
-
-	
+        
         /**
 	 * Interface to define theme setting methods.
 	 */
         interface theme{
-        void SetTheme(SidePanel sidePanel,BoardPanel boardPanel);
+        void SetTheme(SidePanel sidePanel,BoardPanel instance);
         }
     
         
@@ -135,10 +150,10 @@ public class Tetris extends JFrame {
         class Light implements theme{
         
         @Override
-        public void SetTheme(SidePanel sidePanel ,BoardPanel boardPanel){
+        public void SetTheme(SidePanel sidePanel ,BoardPanel instance){
             
             sidePanel.setBackground(Color.WHITE);
-            boardPanel.setBackground(Color.WHITE);
+            instance.setBackground(Color.WHITE);
 
             }
         
@@ -151,9 +166,9 @@ public class Tetris extends JFrame {
         class Dark implements theme{
         
         @Override
-        public void SetTheme(SidePanel sidePanel,BoardPanel boardPanel){
+        public void SetTheme(SidePanel sidePanel,BoardPanel instance){
             sidePanel.setBackground(Color.BLACK);
-            boardPanel.setBackground(Color.BLACK);
+            instance.setBackground(Color.BLACK);
             
             }
         
@@ -174,12 +189,39 @@ public class Tetris extends JFrame {
           } 
         }
 
-		
+
+        
+//        State Desigen Pattren 
+        
+        public class Context {
+        	
+        	private State state;
+        	
+        	public Context(){
+        		state = null;}
+        	
+        	public void setState(State state){
+        		this.state = state;}
+        	
+        	public State getState(){
+        		return state;}
+        }
+
+        public interface State {
+        	public void doAction(Context context);
+        }
+
+        
+        
+        
+        
+
+	
 	/**
 	 * Creates a new Tetris instance. Sets up the window's properties,
 	 * and adds a controller listener.
 	 */
-	private Tetris() {
+	public Tetris() {
 		/*
 		 * Set the basic properties of the window.
 		 */
@@ -191,23 +233,28 @@ public class Tetris extends JFrame {
 		/*
 		 * Initialize the BoardPanel and SidePanel instances.
 		 */
-		this.board = new BoardPanel(this);
+		this.instance = new BoardPanel(this);
 		this.side = new SidePanel(this);
 		
 		/*
 		 * Add the BoardPanel and SidePanel instances to the window.
 		 */
-		add(board, BorderLayout.CENTER);
+		
+		//		it was board of type BordPanel
+		add(instance, BorderLayout.CENTER);
 		add(side, BorderLayout.EAST);
 		
 		/*
 		 * Adds a custom anonymous KeyListener to the frame.
 		 */
+                
 		addKeyListener(new KeyAdapter() {
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
-								
+                            
+                            
+				ThemeFactory themeFactory = new ThemeFactory();				
 				switch(e.getKeyCode()) {
 				
 				/*
@@ -227,7 +274,7 @@ public class Tetris extends JFrame {
 				 * position is valid. If so, we decrement the current column by 1.
 				 */
 				case KeyEvent.VK_A:
-					if(!isPaused && board.isValidAndEmpty(currentType, currentCol - 1, currentRow, currentRotation)) {
+					if(!isPaused && instance.isValidAndEmpty(currentType, currentCol - 1, currentRow, currentRotation)) {
 						currentCol--;
 					}
 					break;
@@ -238,7 +285,7 @@ public class Tetris extends JFrame {
 				 * position is valid. If so, we increment the current column by 1.
 				 */
 				case KeyEvent.VK_D:
-					if(!isPaused && board.isValidAndEmpty(currentType, currentCol + 1, currentRow, currentRotation)) {
+					if(!isPaused && instance.isValidAndEmpty(currentType, currentCol + 1, currentRow, currentRotation)) {
 						currentCol++;
 					}
 					break;
@@ -290,24 +337,23 @@ public class Tetris extends JFrame {
 						resetGame();
 					}
 					break;
-
-				
+                                
                                 // Change to Dark Theme        
-                                     case KeyEvent.VK_L:
+                case KeyEvent.VK_M:
 					
 					
-                                        theme selectedThemeD = themeFactory.getTheme("Dark"); 
-                                        selectedThemeD.SetTheme(side,board);
+                	theme selectedThemeD = themeFactory.getTheme("Dark"); 
+                    selectedThemeD.SetTheme(side,instance);
 					
-                                    break;
+                    break;
                                     // Change to Light Theme        
-                                    case KeyEvent.VK_M:
+                case KeyEvent.VK_L:
 					
-					theme selectedThemeL = themeFactory.getTheme("Light"); 
-                                        selectedThemeL.SetTheme(side,board);
+                    theme selectedThemeL = themeFactory.getTheme("Light"); 
+                    selectedThemeL.SetTheme(side,instance);
 					
-                                    break;
-				
+                    break;
+                                          				
 				}
 			}
 			
@@ -343,21 +389,25 @@ public class Tetris extends JFrame {
 	/**
 	 * Starts the game running. Initializes everything and enters the game loop.
 	 */
-	private void startGame() {
+	
+	public class StartState implements State {
+
+	public void doAction(Context context) {
 		/*
 		 * Initialize our random number generator, logic timer, and new game variables.
 		 */
-		this.random = new Random();
-		this.isNewGame = true;
-		this.gameSpeed = 1.0f;
+		random = new Random();
+		isNewGame = true;
+		gameSpeed = 1.0f;
 		
 		/*
 		 * Setup the timer to keep the game from running before the user presses enter
 		 * to start it.
 		 */
-		this.logicTimer = new Clock(gameSpeed);
+		logicTimer = new Clock(gameSpeed);
 		logicTimer.setPaused(true);
-		
+		context.setState(this);
+
 		while(true) {
 			//Get the time that the frame started.
 			long start = System.nanoTime();
@@ -392,9 +442,16 @@ public class Tetris extends JFrame {
 					e.printStackTrace();
 				}
 			}
+			
 		}
+		
 	}
 	
+	public String toString(){
+		return "Start State";
+	}
+
+	}
 	/**
 	 * Updates the game and handles the bulk of it's logic.
 	 */
@@ -402,7 +459,7 @@ public class Tetris extends JFrame {
 		/*
 		 * Check to see if the piece's position can move down to the next row.
 		 */
-		if(board.isValidAndEmpty(currentType, currentCol, currentRow + 1, currentRotation)) {
+		if(instance.isValidAndEmpty(currentType, currentCol, currentRow + 1, currentRotation)) {
 			//Increment the current row if it's safe to do so.
 			currentRow++;
 		} else {
@@ -410,14 +467,14 @@ public class Tetris extends JFrame {
 			 * We've either reached the bottom of the board, or landed on another piece, so
 			 * we need to add the piece to the board.
 			 */
-			board.addPiece(currentType, currentCol, currentRow, currentRotation);
+			instance.addPiece(currentType, currentCol, currentRow, currentRotation);
 			
 			/*
 			 * Check to see if adding the new piece resulted in any cleared lines. If so,
 			 * increase the player's score. (Up to 4 lines can be cleared in a single go;
 			 * [1 = 100pts, 2 = 200pts, 3 = 400pts, 4 = 800pts]).
 			 */
-			int cleared = board.checkLines();
+			int cleared = instance.checkLines();
 			if(cleared > 0) {
 				score += 50 << cleared;
 			}
@@ -454,7 +511,7 @@ public class Tetris extends JFrame {
 	 * Forces the BoardPanel and SidePanel to repaint.
 	 */
 	private void renderGame() {
-		board.repaint();
+		instance.repaint();
 		side.repaint();
 	}
 	
@@ -462,17 +519,22 @@ public class Tetris extends JFrame {
 	 * Resets the game variables to their default values at the start
 	 * of a new game.
 	 */
-	private void resetGame() {
-		this.level = 1;
-		this.score = 0;
-		this.gameSpeed = 1.0f;
-		this.nextType = TileType.values()[random.nextInt(TYPE_COUNT)];
-		this.isNewGame = false;
-		this.isGameOver = false;		
-		board.clear();
+	
+	private class ResetGame implements State {
+		public void doAction(Context context) {
+
+		level = 1;
+		score = 0;
+		gameSpeed = 1.0f;
+		nextType = TileType.values()[random.nextInt(TYPE_COUNT)];
+		isNewGame = false;
+		isGameOver = false;		
+		instance.clear();
 		logicTimer.reset();
 		logicTimer.setCyclesPerSecond(gameSpeed);
 		spawnPiece();
+		
+		}
 	}
 		
 	/**
@@ -494,7 +556,7 @@ public class Tetris extends JFrame {
 		 * If the spawn point is invalid, we need to pause the game and flag that we've lost
 		 * because it means that the pieces on the board have gotten too high.
 		 */
-		if(!board.isValidAndEmpty(currentType, currentCol, currentRow, currentRotation)) {
+		if(!instance.isValidAndEmpty(currentType, currentCol, currentRow, currentRotation)) {
 			this.isGameOver = true;
 			logicTimer.setPaused(true);
 		}		
@@ -546,7 +608,7 @@ public class Tetris extends JFrame {
 		 * Check to see if the new position is acceptable. If it is, update the rotation and
 		 * position of the piece.
 		 */
-		if(board.isValidAndEmpty(currentType, newColumn, newRow, newRotation)) {
+		if(instance.isValidAndEmpty(currentType, newColumn, newRow, newRotation)) {
 			currentRotation = newRotation;
 			currentRow = newRow;
 			currentCol = newColumn;
@@ -633,34 +695,51 @@ public class Tetris extends JFrame {
 		return currentRotation;
 	}
 
-	/**
-	 * Entry-point of the game. Responsible for creating and starting a new
-	 * game instance.
-	 * @param args Unused.
-	 */
-	public static void main(String[] args) {
-		
-	// Create an instance of the ExistingLoginPage
-    ExistingLoginPage loginPage = new ExistingLoginPage();
+//	instatied Start with an instance methode of tetries 
+	public void startGame(){
+		Context context = new Context();
 
-    // Create an instance of the adapter, passing the username and password fields from the login page
-    LoginProxy loginProxy = new LoginProxy(loginPage.getUsernameField(), loginPage.getPasswordField());
+		StartState startState = new StartState();
+		startState.doAction(context);
+		System.out.println(context.getState().toString());
 
-    // Use the proxy for authentication
-    String username = "admin";
-    String password = "password";
-    boolean isAuthenticated = loginProxy.authenticate(username, password);
-
-    if (isAuthenticated) {
-        System.out.println("Login successful!");
-        // Start the Tetris game
-        Tetris tetris = new Tetris(loginProxy);
-        tetris.startGame();
-    } else {
-        System.out.println("Login failed. Invalid username or password.");
-        // Handle login failure scenario
-    }
-    
 	}
+	
+	public void resetGame() {
+		Context context = new Context();
+
+		ResetGame resetGame = new ResetGame();
+		resetGame.doAction(context);
+
+	}
+
+/**
+ * Entry-point of the game. Responsible for creating and starting a new
+ * game instance.
+ * @param args Unused.
+ */
+public static void main(String[] args) {
+	
+	 // Create an instance of ExistingLoginPage
+//    ExistingLoginPage loginPage = new ExistingLoginPage();
+//    
+//    // Create an instance of the adapter, passing the username and password fields from the login page
+//    LoginProxy loginProxy = new LoginProxy(loginPage.getUsernameField(), loginPage.getPasswordField());
+//
+//    // Use the proxy for authentication
+//    
+//    boolean isAuthenticated = loginProxy.authenticate("admin", "password");
+//    
+//    if (isAuthenticated) {
+        // If authentication is successful, start the game
+        Tetris tetris = new Tetris(); // Pass the login proxy to Tetris constructor
+        tetris.startGame();
+//    } else {
+//        // If authentication fails, display an error message or handle it accordingly
+//        System.out.println("Authentication failed. Please try again.");
+//    }
+//}
+}
+
 
 }
