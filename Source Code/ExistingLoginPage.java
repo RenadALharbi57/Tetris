@@ -60,6 +60,9 @@ public class ExistingLoginPage extends JFrame {
         // Dummy validation logic - Replace with your actual login logic
         return "admin".equals(username) && "password".equals(password);
     }
+    public JButton getLoginButton() {
+        return loginButton;
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {

@@ -760,24 +760,9 @@ public class Tetris extends JFrame  {
  */
 public static void main(String[] args) {
 	
-	 // Create an instance of ExistingLoginPage
-//    ExistingLoginPage loginPage = new ExistingLoginPage();
-//    
-//    // Create an instance of the adapter, passing the username and password fields from the login page
-//    LoginProxy loginProxy = new LoginProxy(loginPage.getUsernameField(), loginPage.getPasswordField());
-//
-//    // Use the proxy for authentication
-//    
-//    boolean isAuthenticated = loginProxy.authenticate("admin", "password");
-//    
-//    if (isAuthenticated) {
-        // If authentication is successful, start the game
+		NewLoginAdapter.main(args);
         Tetris tetris = new Tetris(); // Pass the login proxy to Tetris constructor
         tetris.startGame();
-//    } else {
-//        // If authentication fails, display an error message or handle it accordingly
-//        System.out.println("Authentication failed. Please try again.");
-//    }
-//}
+
 }
 }
