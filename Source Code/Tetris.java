@@ -143,36 +143,30 @@ public class Tetris extends JFrame  {
 	
 	 // Method to save the game state
     public TetrisMemento saveStateToMemento() {
-        return new TetrisMemento(level, score, currentType, nextType, currentCol, currentRow, currentRotation, isPaused, isGameOver, isNewGame, gameSpeed, dropCooldown, random);
+        return new TetrisMemento(level, score);
     }
 
     // Method to restore the game state
     public void getStateFromMemento(TetrisMemento memento) {
         this.level = memento.getLevel();
         this.score = memento.getScore();
-        this.currentType = memento.getCurrentType();
-        this.nextType = memento.getNextType();
-        this.currentCol = memento.getCurrentCol();
-        this.currentRow = memento.getCurrentRow();
-        this.currentRotation = memento.getCurrentRotation();
-        this.isPaused = memento.isPaused();
-        this.isGameOver = memento.isGameOver();
-        this.isNewGame = memento.isNewGame();
-        this.gameSpeed = memento.getGameSpeed();
-        this.dropCooldown = memento.getDropCooldown();
-        this.random = memento.getRandom();
+
         logicTimer.setCyclesPerSecond(gameSpeed);
     }
 	
     // New methods for saving and loading state
     public void saveGameState() {
         caretaker.saveState(saveStateToMemento());
+        System.out.println("Saved the game state.");
+        System.out.println("Saved Score: " + score + ", Level: " + level);
     }
 
     public void loadGameState() {
         TetrisMemento memento = caretaker.loadState();
         if (memento != null) {
             getStateFromMemento(memento);
+            System.out.println("Loaded the game state.");
+            System.out.println("Loaded Score: " + score + ", Level: " + level);
         }
     }
         //////memento

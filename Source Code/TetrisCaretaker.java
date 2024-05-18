@@ -1,19 +1,19 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 public class TetrisCaretaker {
-    private List<TetrisMemento> mementoList = new ArrayList<>();
+    private Stack<TetrisMemento> mementoStack = new Stack<>();
 
-    // Method to save state
-    public void saveState(TetrisMemento state) {
-        mementoList.add(state);
+    public void saveState(TetrisMemento memento) {
+        mementoStack.push(memento);
+        System.out.println("Game state saved.");
     }
 
-    // Method to load the most recent state
     public TetrisMemento loadState() {
-        if (mementoList.size() > 0) {
-            return mementoList.remove(mementoList.size() - 1);
+        if (!mementoStack.isEmpty()) {
+            System.out.println("Game state loaded.");
+            return mementoStack.pop();
         }
+        System.out.println("No saved game state to load.");
         return null;
     }
 }
