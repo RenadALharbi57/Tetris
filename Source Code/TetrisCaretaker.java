@@ -12,13 +12,12 @@ public class TetrisCaretaker {
 
     public TetrisMemento getMemento(int index) {
 
-    	 //return savedScores.get(index);  
-    	 if (index >= 0 && index < savedScores.size()) {
-    	        return savedScores.get(index);
-    	    } else {
-    	        // Handle the case where the index is out of bounds
-    	        System.err.println("Invalid index for retrieving memento.");
-    	        return null; // or throw an exception
-    	    }
-    }    
-}
+    	if (index >= 0 && index < savedScores.size()) {
+            return savedScores.get(index); //
+        } else {
+            // Handle the case where the index is out of bounds
+            System.err.println("Invalid index for retrieving memento.");
+            return null; // or throw an exception
+        }
+    }
+    }

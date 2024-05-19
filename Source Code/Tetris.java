@@ -128,7 +128,7 @@ public class Tetris extends JFrame  {
 
 	//////memento
 
-    private TetrisCaretaker caretaker = new TetrisCaretaker();
+    private TetrisCaretaker caretaker = new TetrisCaretaker(); //created object of CareTaker
     
 
     public void set(int newScore) {
@@ -150,7 +150,7 @@ public class Tetris extends JFrame  {
 
     }
 	
-    // New methods for saving and loading state
+    // New methods for saving and loading state (game scores)
     public void saveGameState() {
         caretaker.addMemento(storeInMemento());
         System.out.println("Saved the game state.");
@@ -747,8 +747,8 @@ public class Tetris extends JFrame  {
  */
 public static void main(String[] args) {
 		NewLoginAdapter.main(args);
-        Tetris tetris = new Tetris(); // Pass the login proxy to Tetris constructor
-        tetris.set(100);
+        Tetris tetris = new Tetris(); //includes originator code // Pass the login proxy to Tetris constructor
+        tetris.set(0);
         tetris.startGame();
 }
 }
