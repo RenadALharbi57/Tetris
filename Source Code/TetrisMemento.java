@@ -4,8 +4,8 @@ public class TetrisMemento {
     private final int score;
 
     //Save a new level & score to the memento Object
-    public TetrisMemento(int score) {
-        this.score = score;
+    public TetrisMemento(int scoreSave) {
+        this.score = scoreSave;
 
     }
 

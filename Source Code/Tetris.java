@@ -144,10 +144,10 @@ public class Tetris extends JFrame  {
     }
 
     // Gets the level & score currently stored in memento
-    public void restoreFromMemento(TetrisMemento memento) {
-        level = memento.getScore();
+    public int restoreFromMemento(TetrisMemento memento) {
+        score = memento.getScore();
+        return score;
 
-        logicTimer.setCyclesPerSecond(gameSpeed);
     }
 	
     // New methods for saving and loading state
