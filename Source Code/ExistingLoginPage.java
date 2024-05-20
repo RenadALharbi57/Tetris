@@ -1,4 +1,3 @@
-package src;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,18 +34,14 @@ public class ExistingLoginPage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
-
-                // Proxy authentication
-                LoginProxy loginProxy = new LoginProxy(usernameField, passwordField);
-                boolean isAuthenticated = loginProxy.authenticate(username, password);
-
-                if (isAuthenticated) {
+                
+                
+                // Perform login validation (dummy logic)
+                if (login(username, password)) {
                     JOptionPane.showMessageDialog(ExistingLoginPage.this, "Login successful!");
+                    
                     setVisible(false);
-
-                    // Start the Tetris game
-                    Tetris tetris = new Tetris();
-                    tetris.startGame();
+                    
                 } else {
                     JOptionPane.showMessageDialog(ExistingLoginPage.this, "Login failed. Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -60,6 +55,15 @@ public class ExistingLoginPage extends JFrame {
         setVisible(true);
     }
 
+    // Dummy method to simulate login logic
+    private boolean login(String username, String password) {
+        // Dummy validation logic - Replace with your actual login logic
+        return "admin".equals(username) && "password".equals(password);
+    }
+    public JButton getLoginButton() {
+        return loginButton;
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -69,11 +73,13 @@ public class ExistingLoginPage extends JFrame {
         });
     }
 
-    public JTextField getUsernameField() {
-        return usernameField;
-    }
+	public JTextField getUsernameField() {
+		// TODO Auto-generated method stub
+		return usernameField;
+	}
 
-    public JPasswordField getPasswordField() {
-        return passwordField;
-    }
+	public JPasswordField getPasswordField() {
+		// TODO Auto-generated method stub
+		return passwordField;
+	}
 }

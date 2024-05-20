@@ -1,12 +1,9 @@
-package src;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 public class LoginProxy {
     private NewLoginAdapter loginAdapter;
 
-    public LoginProxy(JTextField usernameField, JPasswordField passwordField) {
-        loginAdapter = new NewLoginAdapter(usernameField, passwordField);
+    public LoginProxy(ExistingLoginPage adaptee) {
+        loginAdapter = new NewLoginAdapter(adaptee);
     }
 
     // Proxy method for login, you can add additional functionalities here
@@ -14,8 +11,13 @@ public class LoginProxy {
         // Perform additional checks or logging if needed
         System.out.println("Proxy: Additional checks before authenticating...");
 
+//        long startTime = System.currentTimeMillis();
+
         // Delegate authentication to the actual adapter
-        boolean isAuthenticated = loginAdapter.authenticate(username, password);
+        boolean isAuthenticated = loginAdapter.authenticate();
+        
+//        long endTime = System.currentTimeMillis();
+//        System.out.println("Proxy: Authentication took " + (endTime - startTime) + " ms");
 
         if (isAuthenticated) {
             System.out.println("Proxy: User authenticated successfully");
